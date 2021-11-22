@@ -29,7 +29,7 @@
     <div class="container d-block">   
         <a href="index.php"><i class="bi bi-chevron-left"></i></a>     
         <a class="navbar-brand ms-4" href="">
-            <h2>Tela Consulta</h2>
+            <h2>Tela Consulta 2 - TESTE</h2>
         </a>
     </div>
 </nav>
