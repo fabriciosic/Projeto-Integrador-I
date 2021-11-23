@@ -40,26 +40,29 @@
         <div class="card-body">
             <div class="row">        
                 <div>
-                    <h6>Consultar Código SAP</h6>
-                    <div class="form-group position-relative">
-                        <input type="text" class="form-control" />
-                    </div>
-                    <hr />
-                    <h6>Descrição: Parafuso</h6>
-                    <h6>Código Logix: 0012</h6>
-                    <h6>Template: Bens diversos</h6>
-                    <hr />
-                    <img src="assets/imagens/parafuso.png" width="100px"/>
-                    <img src="assets/imagens/parafuso2.png" width="100px"/>
-                    <img src="assets/imagens/parafuso3.png" width="100px"/>
-                    
+                    <form action="atualizar_produto.php" method="POST" enctype="multipart/form-data" id="formulario">
+                        <h6>Buscar Código SAP</h6>
+                        <div class="form-group position-relative">
+                            <input type="text" class="form-control" id="produto"/>
+                        </div>
+                        <div style="display: none;flex-direction: column;align-items: center" id="carregando_espelho">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden" style="flex: 1"></span>
+                            </div>
+                            <div>
+                                <span style="flex: 1">Buscando produto...</span>
+                            </div>                                    
+                        </div> 
+                        <a class="btn btn-primary" onclick="clicar()">Buscar Produto</a>
+                        <hr />
+                        <div id="div_resultado_busca"></div>
+                    </form>
                 </div>      
             </div>
         </div>
     </div>
 </div>
-    
- 
+
    
 <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -67,31 +70,48 @@
 <script src="assets/vendors/toastify/toastify.js"></script>
 
 <script>
-$('#informativos').addClass('active');
 
-function marcar_como_lido(id_mensagem,cpf_servidor){         
+
+function buscar_produto(texto){         
     
     $('#carregando').css("display", "flex");
 
     $.ajax({
-        url: 'assets/ajax/marcar_como_lido.php',
+        url: 'assets/ajax/busca_produto.php',
         type: 'POST',
-        data: jQuery.param({ id_mensagem,cpf_servidor }),
+        data: jQuery.param({ texto }),
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        success: function(data) { 
-            $('#inf_'+id_mensagem).html(data);                
-            $('#div_inf_'+id_mensagem).html('<h6 style="color: #999"><i>Leitura realizada em...</i></h6>');  
+        success: function(data) {                            
+            $('#div_resultado_busca').html(data);                         
         },
         error: function () {
             alert("error");
         }
-    }); 
-            
+    });             
 }    
 
-</script>                     
+function clicar(){   
+    let texto = document.getElementById('produto').value;    
+    buscar_produto(texto);
+}
+function clicar_automatico(codigoRecuperado){  
+      
+    let texto2 = codigoRecuperado;     
+    buscar_produto(texto2);
+}
+</script>  
 
 <script src="assets/js/main.js"></script>    
 </body>
 
+<?php 
+$codigo_logix_recuperado = $_GET['p']; 
+
+if(!empty($codigo_logix_recuperado) && !is_null($codigo_logix_recuperado)){?>
+    <script>
+            var codigo = <?php echo $codigo_logix_recuperado; ?>;
+            clicar_automatico(codigo);
+       
+    </script>
+<?php } ?>   
 </html>
